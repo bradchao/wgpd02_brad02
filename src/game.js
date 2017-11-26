@@ -183,6 +183,14 @@ var GameLayer = cc.Layer.extend({
 var GameScene = cc.Scene.extend({
     onEnter:function () {
         this._super();
+
+        var colorLayer = new cc.LayerColor(cc.color(127,127,0),
+            cc.winSize.width, cc.winSize.height);
+        colorLayer.x = 0;
+        colorLayer.y = 0;
+        this.addChild(colorLayer);
+
+
         var layer = new GameLayer();
         this.addChild(layer);
     }
