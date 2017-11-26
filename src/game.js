@@ -97,10 +97,19 @@ var GameLayer = cc.Layer.extend({
     },
 
     initListener: function () {
+        cc.log('ok3');
+        var test1 = {
+            event: cc.EventListener.MOUSE,
+            onMouseDown: function (event) {
+                cc.log('OK2');
+            }
+        };
+        cc.eventManager.addListener(test1, this);
+
         var myMouseListener = {
             event: cc.EventListener.MOUSE,
             onMouseDown: function (event) {
-
+                cc.log('OK1');
                 var layer = event.getCurrentTarget();
                 var ex = event.getLocationX();
                 var ey = event.getLocationY();
