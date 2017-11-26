@@ -127,7 +127,7 @@ var GameLayer = cc.Layer.extend({
                     for (var i=0; i<layer.rects.length; i++){
                         if (cc.rectContainsPoint(
                             layer.rects[i], point
-                            )){
+                            ) && layer.inputString.indexOf(i)==-1){
                             layer.inputString += i;
                             cc.log(layer.inputString);
                             layer.input.setString(layer.inputString);
