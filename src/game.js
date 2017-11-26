@@ -97,34 +97,32 @@ var GameLayer = cc.Layer.extend({
     },
 
     initListener: function () {
-        cc.log('ok3');
-        var test1 = {
-            event: cc.EventListener.MOUSE,
-            onMouseDown: function (event) {
-                cc.log('OK2');
-            }
-        };
-        cc.eventManager.addListener(test1, this);
-
         var myMouseListener = {
             event: cc.EventListener.MOUSE,
             onMouseDown: function (event) {
-                cc.log('OK1');
                 var layer = event.getCurrentTarget();
                 var ex = event.getLocationX();
                 var ey = event.getLocationY();
                 var point = new cc.Point(ex,ey);
 
                 if (cc.rectContainsPoint(
-                        layer.enterRect,point)){
+                        layer.enterRect,point) &&
+                    layer.inputString.length == 3
+                ){
                     // input enter
                     cc.log('enter');
 
                 }else if (cc.rectContainsPoint(
-                    layer.backRect,point)){
+                    layer.backRect,point) &&
+                    layer.inputString.length > 0
+                ){
                     // input back
-                    cc.log('back');
-                }else{
+                    layer.input.setColor(cc.color(255,255,255));
+                    layer.inputString =
+                        layer.inputString.substr(0,layer.inputString.length-1);
+                    layer.input.setString(layer.inputString);
+
+                }else if (layer.inputString.length <3){
                     // input number
                     for (var i=0; i<layer.rects.length; i++){
                         if (cc.rectContainsPoint(
