@@ -158,6 +158,17 @@ var GameScene = cc.Scene.extend({
     }
 });
 
+function checkAB(ans,guess) {
+    var a, b; a = b = 0;
+    for (var i=0; i<ans.length; i++){
+        if (ans.charAt(i) == guess.charAt(i)){
+            a++;
+        }else if (ans.indexOf(guess.charAt(i)) !== -1){
+            b++;
+        }
+    }
+    return a +"A" + b + "B";
+}
 
 function createAnswer() {
     var n = [0,1,2,3,4,5,6,7,8,9];
@@ -166,7 +177,8 @@ function createAnswer() {
 }
 
 function shuffle(a) {
-    for (i=a.length; i!=1; i--){
+    var i, j, x;
+    for (i=a.length; i; i--){
         j= parseInt(Math.random()*i);
         x = a[i-1];
         a[i-1] = a[j];
