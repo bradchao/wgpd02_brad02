@@ -10,6 +10,9 @@ var GameLayer = cc.Layer.extend({
     mesg:null,
     inputString: '',
     answer : '',
+    counter:0,
+    winner:null,
+    loser:null,
     ctor:function () {
         this._super();
         //var size = cc.winSize;
@@ -18,6 +21,7 @@ var GameLayer = cc.Layer.extend({
         this.initListener();
 
         this.answer = createAnswer();
+        cc.log(this.answer);
 
         return true;
     },
@@ -97,6 +101,18 @@ var GameLayer = cc.Layer.extend({
             this.back.height
         );
 
+        this.winner = new cc.Sprite(res.winner_png);
+        this.winner.x = cc.winSize.width / 2;
+        this.winner.y = cc.winSize.height / 2;
+        this.addChild(this.winner);
+        this.winner.setVisible(false);
+
+        this.loser = new cc.Sprite(res.loser_png);
+        this.loser.x = cc.winSize.width / 2;
+        this.loser.y = cc.winSize.height / 2;
+        this.addChild(this.loser);
+        this.loser.setVisible(false);
+
     },
 
     initListener: function () {
@@ -113,6 +129,20 @@ var GameLayer = cc.Layer.extend({
                     layer.inputString.length == 3
                 ){
                     // input enter
+                    var result = checkAB(layer.answer,
+                        layer.inputString);
+                    layer.mesg.setString(result);
+                    layer.counter++;
+
+                    if (result === '3A0B'){
+                        layer.winner.setVisible(true);
+                    }else if (layer.counter >= 10){
+                        layer.loser.setVisible(true);
+                    }else{
+                        layer.inputString = '';
+                        layer.input.setString(layer.inputString);
+                        layer.input.setColor(cc.color(255,255,255));
+                    }
 
 
                 }else if (cc.rectContainsPoint(
