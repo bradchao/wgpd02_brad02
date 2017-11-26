@@ -9,12 +9,15 @@ var GameLayer = cc.Layer.extend({
     input:null,
     mesg:null,
     inputString: '',
+    answer : '',
     ctor:function () {
         this._super();
         //var size = cc.winSize;
 
         this.initView();
         this.initListener();
+
+        this.answer = createAnswer();
 
         return true;
     },
@@ -110,7 +113,7 @@ var GameLayer = cc.Layer.extend({
                     layer.inputString.length == 3
                 ){
                     // input enter
-                    cc.log('enter');
+
 
                 }else if (cc.rectContainsPoint(
                     layer.backRect,point) &&
@@ -154,3 +157,20 @@ var GameScene = cc.Scene.extend({
         this.addChild(layer);
     }
 });
+
+
+function createAnswer() {
+    var n = [0,1,2,3,4,5,6,7,8,9];
+    n = shuffle(n);
+    return '' + n[0] + n[1] + n[2];
+}
+
+function shuffle(a) {
+    for (i=a.length; i!=1; i--){
+        j= parseInt(Math.random()*i);
+        x = a[i-1];
+        a[i-1] = a[j];
+        a[j] = x;
+    }
+    return a;
+}
