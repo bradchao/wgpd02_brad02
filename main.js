@@ -85,7 +85,7 @@ cc.game.onStart = function(){
     // }, this);
 
     cc.LoaderScene.preload(g_resources, function () {
-        cc.director.runScene(new GameScene());
+        cc.director.runScene(new MenuScene());
     }, this);
 
 

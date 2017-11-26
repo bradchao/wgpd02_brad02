@@ -136,6 +136,7 @@ var GameLayer = cc.Layer.extend({
                 var point = new cc.Point(ex,ey);
 
                 if (!layer.isGaming){
+                    cc.log();
                     // 開新局
                     layer.initGame();
                 }else {
@@ -144,6 +145,7 @@ var GameLayer = cc.Layer.extend({
                             layer.enterRect, point) &&
                         layer.inputString.length == layer.dig
                     ) {
+
                         // input enter
                         var result = checkAB(layer.answer,
                             layer.inputString);
@@ -207,11 +209,11 @@ var GameScene = cc.Scene.extend({
             cc.winSize.width, cc.winSize.height);
         colorLayer.x = 0;
         colorLayer.y = 0;
-        this.addChild(colorLayer);
+        this.addChild(colorLayer,0);
 
 
         var layer = new GameLayer();
-        this.addChild(layer);
+        this.addChild(layer,1);
     }
 });
 

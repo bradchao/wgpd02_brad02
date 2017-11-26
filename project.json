@@ -16,6 +16,7 @@
         "src/brad01.js",
         "src/brad02.js",
         "src/game.js",
+        "src/menu.js",
         "src/app.js"
     ]
 }
