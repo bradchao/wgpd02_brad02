@@ -123,10 +123,15 @@ var GameLayer = cc.Layer.extend({
                             )){
                             layer.inputString += i;
                             cc.log(layer.inputString);
-                            //layer.input.setString(layer.inputString);
+                            layer.input.setString(layer.inputString);
                             break;
                         }
                     }
+
+                    if (layer.inputString.length == 3) {
+                        layer.input.setColor(cc.color(255,0,0));
+                    }
+
                 }
 
 
