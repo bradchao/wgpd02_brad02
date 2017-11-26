@@ -13,6 +13,8 @@ var GameLayer = cc.Layer.extend({
     counter:0,
     winner:null,
     loser:null,
+    dig:4,
+    isGaming:true,
     ctor:function () {
         this._super();
         //var size = cc.winSize;
@@ -20,8 +22,7 @@ var GameLayer = cc.Layer.extend({
         this.initView();
         this.initListener();
 
-        this.answer = createAnswer();
-        cc.log(this.answer);
+        this.initGame();
 
         return true;
     },
@@ -114,7 +115,17 @@ var GameLayer = cc.Layer.extend({
         this.loser.setVisible(false);
 
     },
+    initGame: function () {
+        this.isGaming = true;
+        this.winner.setVisible(false);
+        this.loser.setVisible(false);
+        this.counter = 0;
+        this.answer = createAnswer(this.dig);
+        this.inputString = '';
+        this.input.setString(this.inputString);
+        this.input.setColor(cc.color(255, 255, 255));
 
+    },
     initListener: function () {
         var myMouseListener = {
             event: cc.EventListener.MOUSE,
@@ -124,56 +135,64 @@ var GameLayer = cc.Layer.extend({
                 var ey = event.getLocationY();
                 var point = new cc.Point(ex,ey);
 
-                if (cc.rectContainsPoint(
-                        layer.enterRect,point) &&
-                    layer.inputString.length == 3
-                ){
-                    // input enter
-                    var result = checkAB(layer.answer,
-                        layer.inputString);
-                    layer.mesg.setString(result);
-                    layer.counter++;
+                if (!layer.isGaming){
+                    // 開新局
+                    layer.initGame();
+                }else {
 
-                    if (result === '3A0B'){
-                        layer.winner.setVisible(true);
-                    }else if (layer.counter >= 10){
-                        layer.loser.setVisible(true);
-                    }else{
-                        layer.inputString = '';
-                        layer.input.setString(layer.inputString);
-                        layer.input.setColor(cc.color(255,255,255));
-                    }
+                    if (cc.rectContainsPoint(
+                            layer.enterRect, point) &&
+                        layer.inputString.length == layer.dig
+                    ) {
+                        // input enter
+                        var result = checkAB(layer.answer,
+                            layer.inputString);
+                        layer.mesg.setString(result);
+                        layer.counter++;
 
-
-                }else if (cc.rectContainsPoint(
-                    layer.backRect,point) &&
-                    layer.inputString.length > 0
-                ){
-                    // input back
-                    layer.input.setColor(cc.color(255,255,255));
-                    layer.inputString =
-                        layer.inputString.substr(0,layer.inputString.length-1);
-                    layer.input.setString(layer.inputString);
-
-                }else if (layer.inputString.length <3){
-                    // input number
-                    for (var i=0; i<layer.rects.length; i++){
-                        if (cc.rectContainsPoint(
-                            layer.rects[i], point
-                            ) && layer.inputString.indexOf(i)==-1){
-                            layer.inputString += i;
-                            cc.log(layer.inputString);
+                        if (result === layer.dig + 'A0B') {
+                            layer.winner.setVisible(true);
+                            layer.isGaming = false;
+                        } else if (layer.counter >= 3) {
+                            layer.loser.setVisible(true);
+                            layer.isGaming = false;
+                        } else {
+                            layer.inputString = '';
                             layer.input.setString(layer.inputString);
-                            break;
+                            layer.input.setColor(cc.color(255, 255, 255));
+                            layer.isGaming = true;
                         }
-                    }
 
-                    if (layer.inputString.length == 3) {
-                        layer.input.setColor(cc.color(255,0,0));
-                    }
 
+                    } else if (cc.rectContainsPoint(
+                            layer.backRect, point) &&
+                        layer.inputString.length > 0
+                    ) {
+                        // input back
+                        layer.input.setColor(cc.color(255, 255, 255));
+                        layer.inputString =
+                            layer.inputString.substr(0, layer.inputString.length - 1);
+                        layer.input.setString(layer.inputString);
+
+                    } else if (layer.inputString.length < layer.dig) {
+                        // input number
+                        for (var i = 0; i < layer.rects.length; i++) {
+                            if (cc.rectContainsPoint(
+                                    layer.rects[i], point
+                                ) && layer.inputString.indexOf(i) == -1) {
+                                layer.inputString += i;
+                                cc.log(layer.inputString);
+                                layer.input.setString(layer.inputString);
+                                break;
+                            }
+                        }
+
+                        if (layer.inputString.length == layer.dig) {
+                            layer.input.setColor(cc.color(255, 0, 0));
+                        }
+
+                    }
                 }
-
 
             }
         };
@@ -208,10 +227,15 @@ function checkAB(ans,guess) {
     return a +"A" + b + "B";
 }
 
-function createAnswer() {
+function createAnswer(d) {
     var n = [0,1,2,3,4,5,6,7,8,9];
     n = shuffle(n);
-    return '' + n[0] + n[1] + n[2];
+    var ret = '';
+    for (var i=0; i<d; i++){
+        ret += n[i];
+    }
+
+    return ret;
 }
 
 function shuffle(a) {
