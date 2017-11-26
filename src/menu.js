@@ -23,6 +23,9 @@ var MenuLayer = cc.Layer.extend({
     doStart: function () {
         cc.log("doStart");
         cc.director.pushScene(new GameScene());
+        cc.director.pushScene(
+            new cc.TransitionCrossFade(
+                1,new GameScene()));
     },
 
     doSetting:function () {
